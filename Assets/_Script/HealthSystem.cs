@@ -8,7 +8,7 @@ public class HealthSystem : MonoBehaviour
 {
     //UI for win/lose
     [SerializeField] private GameObject loseUI;
-
+    public AudioSource hitSound;
 
     [SerializeField] private ParticleSystem hitParticleFX;
     [SerializeField] private GameObject boat;
@@ -95,6 +95,7 @@ public class HealthSystem : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Rock"))
         {
+            hitSound.Play();
             TakeDamage(50);
             if (!isDead)
             {

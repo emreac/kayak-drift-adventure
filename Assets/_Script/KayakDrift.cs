@@ -4,6 +4,11 @@ using UnityEngine;
 public class KayakDrift : MonoBehaviour
 {
 
+    public AudioSource oarSoundL;
+    public AudioSource oarSoundR;
+    public AudioSource winSound;
+    
+
     public HealthSystem healthSystem;
     public GameObject confetti;
     [SerializeField] private GameObject winUI;
@@ -30,6 +35,8 @@ public class KayakDrift : MonoBehaviour
 
     void Start()
     {
+     
+
         moveSpeed = 2f;
         // Ensure both animations are off at the start (idle state)
         animator.SetBool("isLeft", false);
@@ -59,7 +66,7 @@ public class KayakDrift : MonoBehaviour
             if (steerInput < 0)
             {
                 // When steering left
-
+                oarSoundL.Play();
                 animator.SetBool("isLeft", true);
                 animator.SetBool("isRight", false); // Ensure isRight is false
 
@@ -70,7 +77,7 @@ public class KayakDrift : MonoBehaviour
             else if (steerInput > 0)
             {
                 // When steering right
-
+                oarSoundR.Play();
                 animator.SetBool("isLeft", false);  // Ensure isLeft is false
                 animator.SetBool("isRight", true);
 
@@ -87,6 +94,7 @@ public class KayakDrift : MonoBehaviour
         }
         else
         {
+         
             // Reset both isLeft and isRight when no steering input is detected
             animator.SetBool("isLeft", false);
             animator.SetBool("isRight", false);
@@ -137,6 +145,7 @@ public class KayakDrift : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Finish"))
         {
+            winSound.Play();
             Debug.Log("You Win!");
             StartCoroutine(WinScreenLoader());
             confetti.SetActive(true);
@@ -150,4 +159,10 @@ public class KayakDrift : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         winUI.SetActive(true);
     }
+
+    // Method to play the sound while holding
+ 
+
+    // Method to stop the sound when releasing
+  
 }
