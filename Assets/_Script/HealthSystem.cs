@@ -14,6 +14,7 @@ public class HealthSystem : MonoBehaviour
     [SerializeField] private GameObject boat;
     public KayakDrift kayakDrift;
     public int maxHealth = 100;
+    public int healAmount = 10;
     public int currentHealth;
     public bool isDead;
     public Slider healthSlider;
@@ -27,6 +28,7 @@ public class HealthSystem : MonoBehaviour
             healthSlider.maxValue = maxHealth; // Set the slider's max value to the kayak's max health
             healthSlider.value = currentHealth; // Set the initial value of the slider
         }
+        
     }
 
     // Update is called once per frame
@@ -38,6 +40,8 @@ public class HealthSystem : MonoBehaviour
     public void TakeDamage(int damage)
     {
         if (isDead) return;
+        // Cancel auto-healing if it is running
+        CancelInvoke("AutoHeal");
 
         currentHealth -= damage;
 
@@ -52,7 +56,11 @@ public class HealthSystem : MonoBehaviour
         {
             Die();
         }
-
+        else
+        {
+            //Auto Heal
+            InvokeRepeating("AutoHeal", 2f, 5f);
+        }
     }
 
     public void Heal(int amount)
@@ -72,13 +80,20 @@ public class HealthSystem : MonoBehaviour
 
     public void Die() {
         StartCoroutine(LoseScreenLoader());
-       
+        CancelInvoke("AutoHeal");
         hitParticleFX.Stop();
         kayakDrift.moveSpeed = 0f;
         DOTween.Play("DeadFlip");
         Debug.Log("Dead, Game over!");
     }
 
+    void AutoHeal()
+    {
+        if (!isDead)
+        {
+            Heal(healAmount); // Heal the specified amount
+        }
+    }
 
     public void ResetHealth()
     {
@@ -110,5 +125,10 @@ public class HealthSystem : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         loseUI.SetActive(true);
 
+    }
+
+    void OnDestroy()
+    {
+        CancelInvoke("AutoHeal");
     }
 }
