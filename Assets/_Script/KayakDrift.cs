@@ -1,13 +1,16 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.SceneManagement;
 
 public class KayakDrift : MonoBehaviour
 {
-
+    bool isUserCompleteLevel;
+    float score;
     public AudioSource oarSoundL;
     public AudioSource oarSoundR;
     public AudioSource winSound;
-    
+
 
     public HealthSystem healthSystem;
     public GameObject confetti;
@@ -35,7 +38,7 @@ public class KayakDrift : MonoBehaviour
 
     void Start()
     {
-     
+
 
         moveSpeed = 2f;
         // Ensure both animations are off at the start (idle state)
@@ -94,7 +97,7 @@ public class KayakDrift : MonoBehaviour
         }
         else
         {
-         
+
             // Reset both isLeft and isRight when no steering input is detected
             animator.SetBool("isLeft", false);
             animator.SetBool("isRight", false);
@@ -145,6 +148,11 @@ public class KayakDrift : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Finish"))
         {
+            int levelNumber = SceneManager.GetActiveScene().buildIndex;
+
+            score += 100;
+            TinySauce.OnGameFinished(isUserCompleteLevel, score, levelNumber);
+
             winSound.Play();
             Debug.Log("You Win!");
             StartCoroutine(WinScreenLoader());
@@ -161,8 +169,8 @@ public class KayakDrift : MonoBehaviour
     }
 
     // Method to play the sound while holding
- 
+
 
     // Method to stop the sound when releasing
-  
+
 }

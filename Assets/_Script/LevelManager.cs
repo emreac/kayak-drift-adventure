@@ -5,12 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-   
+    public bool isUserCompleteLevel;
+    private float score;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        int levelNumber = SceneManager.GetActiveScene().buildIndex;
+        TinySauce.OnGameStarted("Level Number"+levelNumber);
     }
 
     // Update is called once per frame
